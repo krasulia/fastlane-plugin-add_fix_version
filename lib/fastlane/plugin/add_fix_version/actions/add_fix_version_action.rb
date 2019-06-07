@@ -12,8 +12,8 @@ module Fastlane
         site         = params[:url]
         project_id   = params[:project_key]
         version_name = params[:version_name]
+        username =  params[:login]
         auth_type = :basic
-        login = params[:login]
         password = params[:password]
 
         options = {
