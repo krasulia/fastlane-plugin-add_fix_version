@@ -12,8 +12,8 @@ module Fastlane
         site         = params[:url]
         project_id   = params[:project_key]
         version_name = params[:version_name]
-        username =  params[:login]
-        auth_type = :basic
+        username =  params[:username]
+        auth_type = params[:auth_type]
         password = params[:password]
 
         options = {
@@ -106,35 +106,33 @@ module Fastlane
 
       def self.available_options
         [
-          FastlaneCore::ConfigItem.new(key: :url,
-                               description: "A description of your option",
-                                  optional: false,
-                                      type: String),
-
-          FastlaneCore::ConfigItem.new(key: :login,
-                               description: "Login for JIRA",
-                                  optional: false,
-                                      type: String),
-
-          FastlaneCore::ConfigItem.new(key: :password,
-                               description: "Password for JIRA",
-                                  optional: false,
-                                      type: String),
-
-          FastlaneCore::ConfigItem.new(key: :project_key,
-                               description: "JIRA project key",
-                                  optional: false,
-                                      type: String),
-
-          FastlaneCore::ConfigItem.new(key: :issue_ids,
-                                       description: "Issue IDs or keys for JIRA, i.e. [\"IOS-123\", \"IOS-123\"]",
-                                       optional: false,
-                                       is_string: false),
-
-          FastlaneCore::ConfigItem.new(key: :version_name,
-                                       description: "Version name that will be set as fix version to specified issues.\nIf version does not exist, it will be created",
-                                       type: String,
-                                       optional: false)
+            FastlaneCore::ConfigItem.new(key: :url,
+                                         description: "URL for JIRA instance",
+                                         verify_block: proc do |value|
+                                           UI.user_error!("No url for JIRA given, pass using `url: 'url'`") if value.to_s.length == 0
+                                         end),
+            FastlaneCore::ConfigItem.new(key: :username,
+                                         optional: true,
+                                         description: "Username for JIRA"),
+            FastlaneCore::ConfigItem.new(key: :password,
+                                         description: "Password for JIRA",
+                                         optional: true,
+                                         sensitive: true),
+            FastlaneCore::ConfigItem.new(key: :auth_type,
+                                         description: "Authorization type to use. Currently supported: :basic or :cookie",
+                                         default_value: :basic),
+            FastlaneCore::ConfigItem.new(key: :issue_ids,
+                                         description: "Issue IDs or keys for JIRA, i.e. [\"IOS-123\", \"IOS-123\"]",
+                                         optional: true,
+                                         is_string: false),
+            FastlaneCore::ConfigItem.new(key: :version_name,
+                                         description: "Version name that will be set as fix version to specified issues.\nIf version does not exist, it will be created",
+                                         is_string: true,
+                                         optional: true),
+            FastlaneCore::ConfigItem.new(key: :project_key,
+                                         description: "Project ID or key where version will be created if needed",
+                                         is_string: true,
+                                         optional: true)
 
         ]
       end
