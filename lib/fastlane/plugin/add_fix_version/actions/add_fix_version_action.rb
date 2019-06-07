@@ -106,7 +106,7 @@ module Fastlane
 
       def self.available_options
         [
-          FastlaneCore::ConfigItem.new(key: url,
+          FastlaneCore::ConfigItem.new(key: :url,
                                description: "A description of your option",
                                   optional: false,
                                       type: String),
